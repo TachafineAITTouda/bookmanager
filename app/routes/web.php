@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BookController::class, 'index'])->name('books.index');
@@ -14,3 +15,5 @@ Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index'
 Route::get('/authors/{author}/edit', [AuthorController::class, 'edit'])->name('authors.edit');
 Route::put('/authors/{author}', [AuthorController::class, 'update'])->name('authors.update');
 
+Route::get('/export', [ExportController::class, 'index'])->name('export.index');
+Route::post('/export', [ExportController::class, 'export'])->name('export.export');
