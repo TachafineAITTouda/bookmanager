@@ -9,3 +9,13 @@ dev-up:
 laravel-test:
 	docker-compose exec laravel php artisan migrate --env=testing
 	docker-compose exec laravel php artisan test
+
+laravel-shell:
+	docker-compose exec laravel bash
+
+prod-up:
+	[ -f .env ] || cp .env.prod.sample .env
+	docker compose -f docker-compose.prod.yml up -d
+
+prod-down:
+	docker compose -f docker-compose.prod.yml down
