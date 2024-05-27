@@ -59,9 +59,6 @@
                         </div>
                     </form>
                 </td>
-                <td class="px-6 py-4 text-sm">
-
-                </td>
             </tr>
             @foreach ($books as $book)
             <tr class="bg-white dark:bg-gray-800">
