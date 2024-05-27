@@ -1,4 +1,4 @@
-<form class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+<form class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-full md:flex-1"
 @isset($book)
     action="{{ route('books.update', $book->id) }}"
 @else
