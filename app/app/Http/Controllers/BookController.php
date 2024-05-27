@@ -6,6 +6,8 @@ use App\Http\Requests\SearchBooksRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Author;
 use App\Models\Book;
+use App\Models\Enums\BookSortDirectionEnum;
+use App\Models\Enums\BookSortEnum;
 use Exception;
 class BookController extends Controller
 {
@@ -16,16 +18,27 @@ class BookController extends Controller
      */
     public function index(SearchBooksRequest $request)
     {
+        $sort = $request->sort;
+        $direction = $request->direction;
+
         $searchTitle = $request->stitle;
         $searchAuthorName = $request->sauthorname;
 
-        if ($searchTitle) {
-            $books = Book::findByTitle($searchTitle)->paginate(25);
-        } elseif ($searchAuthorName) {
-            $books = Author::findBooksByAuthorName($searchAuthorName)->paginate(25);
+        $books = null;
+        if ($searchTitle || $searchAuthorName || $sort || $direction) {
+            $filters = [
+                'title' => $searchTitle,
+                'authorname' => $searchAuthorName
+            ];
+            $sort = [$sort => $direction];
+            $books = Book::filters(
+                $filters,
+                $sort
+            )->paginate(25);
         } else {
             $books = Book::paginate(25);
         }
+
         return view('books.index', compact('books'));
     }
 

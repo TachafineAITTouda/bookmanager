@@ -1,10 +1,12 @@
-<form class="max-w-sm mb-3 mx-auto"
+<form class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
 @isset($book)
     action="{{ route('books.update', $book->id) }}"
 @else
     action="{{ route('books.store') }}"
 @endisset
 method="POST">
+    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Add new book</h5>
+
     @csrf
     @isset($book)
         @method('PUT')

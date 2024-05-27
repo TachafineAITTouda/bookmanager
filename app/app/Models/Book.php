@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -92,13 +94,59 @@ class Book extends Model
     }
 
     /**
-     * Find a book by its title or a substring of its title.
+     * Method scopeFilters
      *
-     * @param string $title
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @param ?array $filter
+     * @param ?array $sort
+     *
+     * @return void
      */
-    public static function findByTitle(string $title)
-    {
-        return static::where('title', 'like', "%$title%");
+    public function scopeFilters(
+        Builder $query,
+        ?array $filters,
+        ?array $sort
+    ):void {
+        if(is_array($filters))
+        {
+             // Run the query based on the field and value
+             foreach ($filters as $field => $searchFor) {
+                switch ($field) {
+                    case 'title':
+                        $query->where(DB::raw('upper('.$field.')'),'like','%'.strtoupper($searchFor).'%');
+                        break;
+                    case 'authorname':
+                        $query->whereHas('author', function ($query) use ($searchFor) {
+                            $query->where(DB::raw('upper(fullname)'),'like','%'.strtoupper($searchFor).'%');
+                        });
+                        break;
+                    case 'created_at':
+                    case 'updated_at':
+                        $query->where($field,$searchFor);
+                        break;
+                    default:
+                        $query;
+                        break;
+                }
+            }
+        }
+
+        if(is_array($sort)) {
+            $field = key($sort);
+            $direction = reset($sort);
+            $query->when(
+                $field,
+                static function (Builder $query, $field) use ($direction): void {
+                   match($field) {
+                        'title' => $query->orderBy($field , !empty($direction) ? $direction : 'ASC'),
+                        'authorname' => $query->join('authors', 'authors.id', '=', 'books.author_id')
+                            ->orderBy('authors.fullname', !empty($direction) ? $direction : 'ASC'),
+                       default => $query,
+                   };
+               }
+           );
+        }
+
     }
+
 }

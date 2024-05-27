@@ -19,17 +19,4 @@ class Author extends Model
     {
         return $this->hasMany(Book::class);
     }
-
-    /**
-     * find books by their author name.
-     *
-     * @param string $fullname
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function findBooksByAuthorName(string $fullname)
-    {
-        return Book::whereHas('author', function ($query) use ($fullname) {
-            $query->where('fullname', 'like', "%$fullname%");
-        });
-    }
 }

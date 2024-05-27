@@ -26,6 +26,8 @@ class SearchBooksRequest extends FormRequest
         return [
             'stitle' => 'nullable|string|max:255',
             'sauthorname' => 'nullable|string|max:255',
+            'sort' => 'nullable|string|in:title,author',
+            'direction' => 'nullable|string|in:asc,desc',
         ];
     }
 }
