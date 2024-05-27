@@ -81,13 +81,14 @@ class Book extends Model
             $author = Author::firstOrCreate([
                 'fullname' => $authorName,
             ]);
-            if ($this->author_id !== $author->id && $this->author->books->count() === 1){
-                $this->author->delete();
-            }
-
+            $oldAuthor = $this->author;
             $this->title = $title;
             $this->author_id = $author->id;
             $this->save();
+
+            if ($oldAuthor->books->count() === 0){
+                $oldAuthor->delete();
+            }
 
             return $this;
         }

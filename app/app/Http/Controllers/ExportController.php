@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Formatters\{CsvFormatter, XmlFormatter};
 use App\Http\Requests\ExportRequest;
 use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use SimpleXMLElement;
 
 class ExportController extends Controller
 {
+
+    public function __construct(private XmlFormatter $xmlFormatter, private CsvFormatter $csvFormatter)
+    {
+    }
     /**
      * Display export form.
      *
@@ -33,90 +37,28 @@ class ExportController extends Controller
         $format = $request->format;
         $fields = $request->fields;
 
-        if ($fields === 'all') {
-            $fields = ['title', 'author'];
-        }else{
-            $fields = explode(',', $fields);
-        }
-
-        $query = Book::query();
+        $fields = ($fields === 'all') ? ['title', 'author'] : [$fields];
 
         if (in_array('title', $fields)) {
+            $query = Book::query();
             $query->addSelect('books.title');
-        }
-
-        if (in_array('author', $fields)) {
-            $query->addSelect('authors.fullname as author')
-                  ->join('authors', 'authors.id', '=', 'books.author_id');
+            if (in_array('author', $fields)) {
+                $query->addSelect('authors.fullname as author')
+                      ->join('authors', 'authors.id', '=', 'books.author_id');
+            }
+        }else {
+            $query = Author::query();
+            $query->addSelect('authors.fullname as author');
         }
 
         $data = $query->get();
 
-        $fields = array_map(function ($field) {
-            return ucfirst($field);
-        }, $fields);
-
         if ($format === 'csv') {
-            return $this->exportCsv($data, $fields);
+            return $this->csvFormatter->format($data, $fields);
         } elseif ($format === 'xml') {
-            return $this->exportXml($data, $fields);
+            return $this->xmlFormatter->format($data, $fields);
         }
 
         return redirect()->route('export.index')->with('error', 'Invalid format.');
-    }
-
-    /**
-     * Export data to CSV format.
-     *
-     * @param \Illuminate\Support\Collection $data
-     * @param array $fields
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
-    private function exportCsv($data, $fields)
-    {
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="export_'.date('Y-m-d_H-i-s').'.csv"',
-        ];
-
-        $callback = function () use ($data, $fields) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, $fields);
-            foreach ($data as $row) {
-                $csvRow = [];
-                foreach ($fields as $field) {
-                    $csvRow[] = $row->$field ?? '';
-                }
-                fputcsv($handle, $csvRow);
-            }
-            fclose($handle);
-        };
-        return Response::stream($callback, 200, $headers);
-    }
-
-    /**
-     * Export data to XML format.
-     *
-     * @param \Illuminate\Support\Collection $data
-     * @param array $fields
-     * @return \Illuminate\Http\Response
-     */
-    private function exportXml(Collection $data, array $headings)
-    {
-        $headers = [
-            'Content-Type' => 'application/xml',
-            'Content-Disposition' => 'attachment; filename="export_'.date('Y-m-d_H-i-s').'.xml"',
-        ];
-        $xml = new \SimpleXMLElement('<data/>');
-
-        foreach ($data as $row) {
-            $item = $xml->addChild('row');
-            foreach ($headings as $heading) {
-                $field = strtolower($heading);
-                $item->addChild($heading, htmlspecialchars($row->$field ?? ''));
-            }
-        }
-
-        return Response::make($xml->asXML(), 200, $headers);
     }
 }
