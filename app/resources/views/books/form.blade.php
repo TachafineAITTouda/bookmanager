@@ -1,5 +1,14 @@
-<form class="max-w-sm mb-3 mx-auto" action="{{ route('books.store') }}" method="POST">
+<form class="max-w-sm mb-3 mx-auto"
+@isset($book)
+    action="{{ route('books.update', $book->id) }}"
+@else
+    action="{{ route('books.store') }}"
+@endisset
+method="POST">
     @csrf
+    @isset($book)
+        @method('PUT')
+    @endisset
     <div class="mb-5">
         <label for="title" class="block mb-1 text-sm font-medium text-gray-900">Book name</label>
         <input

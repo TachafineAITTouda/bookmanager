@@ -29,6 +29,11 @@ class StoreBookRequest extends FormRequest
         ];
     }
 
+    /**
+     * Custom message for validation
+     *
+     * @return array
+     */
     public function messages()
     {
         return [
