@@ -1,7 +1,7 @@
 LARAVEL_PROJECT_WORKDIR=/home/books/bookmanager
 NGINX_CONF_FILE=/etc/nginx/conf.d/books.conf
 
-cd $LARAVEL_PROJECT_WORKDIR && git checkout . && git pull origin dev
+cd $LARAVEL_PROJECT_WORKDIR && git checkout . && git pull origin master --rebase
 # Copy the Nginx configuration file
 cp $LARAVEL_PROJECT_WORKDIR/docker/nginx/prod.conf $NGINX_CONF_FILE
 
