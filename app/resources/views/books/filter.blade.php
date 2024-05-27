@@ -1,4 +1,4 @@
-<form method="GET" action="{{ route('books.index') }}" class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+<form method="GET" action="{{ route('books.index') }}" class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-full md:flex-1">
     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Filter books</h5>
     <div class="flex flex-col space-y-4">
         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -50,7 +50,7 @@
             <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-small rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 Sort
             </button>
-            <a href="{{ route('books.index') }}" class="text-red-700 hover:underline focus:ring-4 focus:outline-none focus:ring-red-300 font-small rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:text-red-300 dark:hover:text-red-400 dark:focus:ring-red-800">
+            <a href="{{ route('books.index') }}" class="text-red-700 hover:underline focus:ring-4 focus:outline-none focus:ring-red-300 font-small rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:text-red-300 dark:hover:text-red-400 dark:focus:ring-red-800 block mx-auto">
                 Reset
             </a>
         </div>

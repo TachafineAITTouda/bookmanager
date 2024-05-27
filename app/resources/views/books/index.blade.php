@@ -2,7 +2,7 @@
 @section('title', 'Books')
 
 @section('content')
-<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="flex flex-col md:flex-row gap-4">
     @include('books.form')
     @include('books.filter')
 </div>
