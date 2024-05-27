@@ -54,9 +54,5 @@
                 Reset
             </a>
         </div>
-
-        @foreach(request()->except('page', 'sort', 'direction') as $key => $value)
-        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-        @endforeach
     </div>
 </form>
