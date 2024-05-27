@@ -9,7 +9,7 @@
 </head>
 <body>
     @include('layouts.sidebar')
-    <div class="p-4 sm:ml-64 px-20  pt-20">
+    <div class="p-2 sm:ml-64 px-10 pt-10">
             @yield('content')
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

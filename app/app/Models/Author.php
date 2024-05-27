@@ -9,6 +9,7 @@ class Author extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['fullname'];
     /**
      * Get the books for the author.
      *

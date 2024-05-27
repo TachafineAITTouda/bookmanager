@@ -7,4 +7,5 @@ dev-up:
 	docker-compose up -d
 
 laravel-test:
+	docker-compose exec laravel php artisan migrate --env=testing
 	docker-compose exec laravel php artisan test
