@@ -55,6 +55,10 @@ class BookTest extends TestCase
         $newAuthorName = 'Updated Author';
 
         $book = Book::createBook($originalTitle, $originalAuthorName);
+
+        $this->assertDatabaseHas('books', ['title' => $originalTitle]);
+        $this->assertDatabaseHas('authors', ['fullname' => $originalAuthorName]);
+
         $updatedBook = $book->updateBook($newTitle, $newAuthorName);
 
         $this->assertInstanceOf(Book::class, $updatedBook);

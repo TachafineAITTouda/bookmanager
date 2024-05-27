@@ -85,6 +85,7 @@ class Book extends Model
             $this->title = $title;
             $this->author_id = $author->id;
             $this->save();
+            $this->refresh();
 
             if ($oldAuthor->books->count() === 0){
                 $oldAuthor->delete();
