@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchBooksRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Author;
 use App\Models\Book;
 use Exception;
-use Illuminate\Http\Request;
 class BookController extends Controller
 {
     /**
@@ -14,10 +14,18 @@ class BookController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(SearchBooksRequest $request)
     {
-        $books = Book::paginate(10);
+        $searchTitle = $request->stitle;
+        $searchAuthorName = $request->sauthorname;
 
+        if ($searchTitle) {
+            $books = Book::findByTitle($searchTitle)->paginate(25);
+        } elseif ($searchAuthorName) {
+            $books = Author::findBooksByAuthorName($searchAuthorName)->paginate(25);
+        } else {
+            $books = Book::paginate(25);
+        }
         return view('books.index', compact('books'));
     }
 

@@ -88,5 +88,14 @@ class Book extends Model
         }
     }
 
-
+    /**
+     * Find a book by its title or a substring of its title.
+     *
+     * @param string $title
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function findByTitle(string $title)
+    {
+        return static::where('title', 'like', "%$title%");
+    }
 }
